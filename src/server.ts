@@ -4,7 +4,7 @@ import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 import multer from 'multer';
 import Papa from 'papaparse';
-import { createMember, createTeam } from './util/prismaHelpers';
+import { createMember, createTeam, addTeamToMember, syncMatches } from './util/prismaHelpers';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -22,11 +22,7 @@ interface AddMemberRequestBody {
 app.post('/add-member', async (req: Request<{}, {}, AddMemberRequestBody>, res: Response) => {
     const { name } = req.body;
     try {
-        const member = await prisma.member.create({
-            data: {
-                name
-            }
-        });
+        const member = await createMember(prisma, name);
         res.json(member);
     } catch (error: any) {
         res.status(400).json({ error: error.message });
@@ -43,17 +39,48 @@ app.get('/members', async (req: Request, res: Response) => {
     }
 });
 
-// Set up multer for storing uploaded files. This will save them in a 'uploads' directory.
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);
+
+const upload = multer({ storage: multer.memoryStorage() });
+
+app.get('/member-teams/:memberId', async (req: Request<{ memberId: string }>, res: Response) => {
+    const { memberId } = req.params;
+    try {
+        const member = await prisma.member.findUnique({
+            where: { id: Number(memberId) },
+            include: {
+                FootballTeamMember: {
+                    include: {
+                        footballTeam: true
+                    }
+                }
+            }
+        });
+
+        res.json(member);
+    } catch (error: any) {
+        res.status(400).json({ error: error.message });
     }
 });
 
-const upload = multer({ storage: multer.memoryStorage() });
+app.get('/fixtures', async (req: Request, res: Response) => {
+    var myHeaders = new Headers();
+    myHeaders.append("x-rapidapi-key", "f3fea99c1cd57d2b16fa4f0a74ab1ff7");
+    myHeaders.append("x-rapidapi-host", "v3.football.api-sports.io");
+
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        redirect: "follow" as RequestRedirect,
+    }; 
+
+    fetch("https://v3.football.api-sports.io/fixtures?league=39&season=2023", requestOptions)
+        .then(response => response.text())
+        .then(result => {console.log('test'); return result})
+        .then(result => syncMatches( prisma, JSON.parse(result)["response"] as match[]) )
+        .catch(error => console.log('error', error));
+}
+)
+
 
 // Endpoint for file upload
 app.post('/upload', upload.single('file'), (req, res) => {
@@ -82,9 +109,11 @@ app.post('/upload', upload.single('file'), (req, res) => {
                 const member: string = row[0];
                 const team1: string = row[1];
                 const team2: string = row[2];
-                await createMember(prisma, member);
+                const memberObject = await createMember(prisma, member);
                 await createTeam(prisma, team1);
                 await createTeam(prisma, team2);
+                await addTeamToMember(prisma, memberObject.id, team1);
+                await addTeamToMember(prisma, memberObject.id, team2);
                 console.log(`Processed ${member}, ${team1}, ${team2}`);
             });
 

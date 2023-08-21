@@ -19,8 +19,7 @@ model Member {
 }
 
 model FootballTeam {
-  id                 Int                  @id @default(autoincrement())
-  name               String
+  name               String               @id
   FootballTeamMember FootballTeamMember[]
   awayMatch          Match[]              @relation("awayMatch")
   homeMatch          Match[]              @relation("homeMatch")
@@ -28,18 +27,18 @@ model FootballTeam {
 
 model FootballTeamMember {
   id             Int          @id @default(autoincrement())
-  footballTeam   FootballTeam @relation(fields: [footballTeamId], references: [id])
-  footballTeamId Int
+  footballTeam   FootballTeam @relation(fields: [footballTeamId], references: [name])
+  footballTeamId String
   member         Member       @relation(fields: [memberId], references: [id])
   memberId       Int
 }
 
 model Match {
   id                 Int          @id @default(autoincrement())
-  footballTeamHome   FootballTeam @relation("homeMatch", fields: [footballTeamHomeId], references: [id])
-  footballTeamHomeId Int
-  footballTeamAway   FootballTeam @relation("awayMatch", fields: [footballTeamAwayId], references: [id])
-  footballTeamAwayId Int
+  footballTeamHome   FootballTeam @relation("homeMatch", fields: [footballTeamHomeId], references: [name])
+  footballTeamHomeId String
+  footballTeamAway   FootballTeam @relation("awayMatch", fields: [footballTeamAwayId], references: [name])
+  footballTeamAwayId String
   date               DateTime
   score              String
 }

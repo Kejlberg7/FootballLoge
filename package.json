@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "docker:env": "docker-compose -f deploy/docker-compose.env.yml up",
     "start:server": "node dist/out-tsc/server.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",

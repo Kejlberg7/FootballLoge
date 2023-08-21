@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Member } from '@prisma/client';
+import { Member, FootballTeam } from '@prisma/client';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MemberService {
+export class MyService {
 
   private baseUrl = 'http://localhost:3000';
 
@@ -23,6 +23,14 @@ export class MemberService {
     const formData = new FormData();
     formData.append('file', file, file.name);
 
-    return this.http.post(`${this.baseUrl}/uploadFile`, formData);
+    return this.http.post(`${this.baseUrl}/upload`, formData);
+  }
+
+  getMemberTeams(memberId: number) {
+    return this.http.get<{FootballTeamMember:{ footballTeam: FootballTeam}[]}>(`${this.baseUrl}/member-teams/${memberId}`);
+  }
+
+  syncronize() {
+    return this.http.get(`${this.baseUrl}/fixtures`);
   }
 }

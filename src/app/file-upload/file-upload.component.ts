@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { MyService } from '../member.service';
 
 @Component({
   selector: 'app-file-upload',
@@ -7,25 +9,30 @@ import { Component } from '@angular/core';
 })
 export class FileUploadComponent {
 
-  fileToUpload: File | null = null;
-  message: string | null = null;
+  selectedFile: File | null = null;
+
+  constructor(private memberService: MyService) { }
 
   onFileChange(event: any): void {
     if (event.target.files.length > 0) {
-      this.fileToUpload = event.target.files[0];
+      this.selectedFile = event.target.files[0];
     }
   }
 
-  onSubmit(): void {
-    if (!this.fileToUpload) {
-      this.message = "Please select a file.";
+  async onSubmit(): Promise<void> {
+    if (!this.selectedFile) {
+      console.error("No file selected");
       return;
     }
 
-    // Now, upload the file using your service
-    // For demonstration, we'll just show a success message
-    this.message = "File uploaded successfully!";
-    // Reset the file
-    this.fileToUpload = null;
+    const formData = new FormData();
+    formData.append('file', this.selectedFile, this.selectedFile.name);
+
+    try {
+      const response = await this.memberService.uploadFile(this.selectedFile).toPromise();
+      console.log('Upload response:', response);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
   }
 }
