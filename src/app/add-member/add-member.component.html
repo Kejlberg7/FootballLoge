@@ -1,0 +1,8 @@
+<!-- add-member.component.html -->
+<h2>Add Member</h2>
+<form (submit)="addMember()">
+  <label>Name:
+    <input [(ngModel)]="name" name="name" required>
+  </label>
+  <button type="submit">Add</button>
+</form>

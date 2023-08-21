@@ -1,0 +1,7 @@
+<form (submit)="onSubmit()">
+    <input type="file" (change)="onFileChange($event)" />
+    <button type="submit">Upload</button>
+  </form>
+  
+  <p *ngIf="message">{{ message }}</p>
+  
