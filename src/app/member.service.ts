@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Member, FootballTeam } from '@prisma/client';
+import { Member, FootballTeam, Match } from '@prisma/client';
+import { MemberWithMatches, TeamWithMatches } from './expandable-table/expandable-table.component';
 
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class MyService {
 
   private baseUrl = 'http://localhost:3000';
@@ -28,6 +31,10 @@ export class MyService {
 
   getMemberTeams(memberId: number) {
     return this.http.get<{FootballTeamMember:{ footballTeam: FootballTeam}[]}>(`${this.baseUrl}/member-teams/${memberId}`);
+  }
+
+  getTeamMatchesPrMemeber(memberId: number) {
+    return this.http.get<TeamWithMatches>(`${this.baseUrl}/member-teams-matches/${memberId}`);
   }
 
   syncronize() {

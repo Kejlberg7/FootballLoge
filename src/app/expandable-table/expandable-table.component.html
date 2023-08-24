@@ -1,0 +1,82 @@
+<table border="1">
+    <thead>
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Member</th>
+            <th>Wins</th>
+            <th>Draws</th>
+            <th>Losses</th>
+            <th>Total Owed</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-container *ngFor="let member of memberWithMatches">
+            <tr (click)="toggleExpand(member)">
+                <td>➔</td>
+                <td>{{ member.member.id }}</td>
+                <td>{{ member.member.name }}</td>
+                <td>{{ member.wins }}</td>
+                <td>{{ member.draws }}</td>
+                <td>{{ member.losses }}</td>
+                <td>{{ member.totalOwed }}</td>
+            </tr>
+            <tr *ngIf="expandedMember === member">
+                <td colspan="3">
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>Team</th>
+                                <th>Matches</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <td>{{ member.teams[0].team.name }}</td>
+                            <td colspan="3">
+                                <table border="1">
+                                    <thead>
+                                        <tr>
+                                            <th>Home Team</th>
+                                            <th>Away Team</th>
+                                            <th>Score</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let match of member.teams[0].matches">
+                                            <td>{{ match.footballTeamHomeId }}</td>
+                                            <td>{{ match.footballTeamAwayId }}</td>
+                                            <td>{{ match.score }}</td>
+                                            <td>{{ match.date }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td>{{ member.teams[1].team.name }}</td>
+                            <td colspan="3">
+                                <table border="1">
+                                    <thead>
+                                        <tr>
+                                            <th>Home Team</th>
+                                            <th>Away Team</th>
+                                            <th>Score</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let match of member.teams[1].matches">
+                                            <td>{{ match.footballTeamHomeId }}</td>
+                                            <td>{{ match.footballTeamAwayId }}</td>
+                                            <td>{{ match.score }}</td>
+                                            <td>{{ match.date }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </ng-container>
+    </tbody>
+</table>

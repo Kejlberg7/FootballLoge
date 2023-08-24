@@ -1,23 +1,22 @@
-<table *ngIf="membersAndTeams.length; else noData">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Team 1</th>
-        <th>Team 2</th>
-        <!-- Add more columns as per your data -->
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let membersAndTeam of membersAndTeams">
-        <td>{{ membersAndTeam.member }}</td>
-        <td>{{ membersAndTeam.team1 }}</td>
-        <td>{{ membersAndTeam.team2 }}</td>
-        <!-- Add more data cells as per your data -->
-      </tr>
-    </tbody>
-  </table>
-  
-  <ng-template #noData>
-    <p>No members found.</p>
-  </ng-template>
-  
+<table class="member-table" *ngIf="membersAndTeams.length; else noData">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Team 1</th>
+      <th>Team 2</th>
+      <!-- Add more columns as per your data -->
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let membersAndTeam of membersAndTeams">
+      <td>{{ membersAndTeam.member }}</td>
+      <td>{{ membersAndTeam.team1 }}</td>
+      <td>{{ membersAndTeam.team2 }}</td>
+      <!-- Add more data cells as per your data -->
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #noData>
+  <p>No members found.</p>
+</ng-template>

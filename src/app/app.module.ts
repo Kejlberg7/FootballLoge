@@ -8,13 +8,15 @@ import { AppComponent } from './app.component';
 import { MemberListComponent } from './member-list/member-list.component';
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { SyncronizeComponent } from './syncronize/syncronize.component';
+import { ExpandableTableComponent } from './expandable-table/expandable-table.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MemberListComponent,
     FileUploadComponent,
-    SyncronizeComponent
+    SyncronizeComponent,
+    ExpandableTableComponent
   ],
   imports: [
     BrowserModule,

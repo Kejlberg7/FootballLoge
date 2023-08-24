@@ -34,7 +34,7 @@ model FootballTeamMember {
 }
 
 model Match {
-  id                 Int          @id @default(autoincrement())
+  id                 Int          @id 
   footballTeamHome   FootballTeam @relation("homeMatch", fields: [footballTeamHomeId], references: [name])
   footballTeamHomeId String
   footballTeamAway   FootballTeam @relation("awayMatch", fields: [footballTeamAwayId], references: [name])

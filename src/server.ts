@@ -4,7 +4,7 @@ import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 import multer from 'multer';
 import Papa from 'papaparse';
-import { createMember, createTeam, addTeamToMember, syncMatches } from './util/prismaHelpers';
+import { createMember, createTeam, addTeamToMember, syncMatches,getAllTeamMatches } from './util/prismaHelpers';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -57,6 +57,17 @@ app.get('/member-teams/:memberId', async (req: Request<{ memberId: string }>, re
         });
 
         res.json(member);
+    } catch (error: any) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+app.get('/member-teams-matches/:memberId', async (req: Request<{ memberId: string }>, res: Response) => {
+    const { memberId } = req.params;
+    try {
+        const matches = await getAllTeamMatches(prisma, memberId)
+
+        res.json(matches);
     } catch (error: any) {
         res.status(400).json({ error: error.message });
     }
